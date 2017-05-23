@@ -83,46 +83,34 @@ function deleteBook(req, res) {
   });
 }
 
+function updateBook(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) {
+      res.send(err.message);
+    }
 
-// function updateBook(req, res) {
-//   MongoClient.connect(url, function(err, db) {
-//     if (err) {
-//       res.send(err.message);
-//     }
-//
-//     db.collection('books').deleteOne({
-//       _id: ObjectId(req.params.id)
-//     }, function(err, result) {
-//       if (err) {
-//         res.send(err.message);
-//       }
-//       console.log("Delete user success!!");
-//       res.send("Delete user success!!\n" + result);
-//       db.close();
-//     });
-//   });
-//
-//   db.Students.findById(req.params.id)
-//   .then(student => {
-//     db.Students.update({
-//       name : req.body.name || student.name,
-//       gender : req.body.gender || student.gender,
-//       age : req.body.age || student.age,
-//       address : req.body.address || student.address,
-//       email : req.body.email || student.email,
-//       username : req.body.username || student.username,
-//       password : hash || student.password,
-//       role : req.body.role || student.role
-//     }, {
-//       where: {
-//         id: req.params.id
-//       }
-//     })
-//     res.send(`Update user success!!`);
-//   })
-//   .catch(err => res.send(err.message));
-// }
+    db.collection('books').find({
+      _id: ObjectId(req.params.id)
+    }).toArray(function(err, result) {
+      db.collection('books').update({
+        _id: result[0]._id
+      }, {
+        $set: {
+          isbn: req.body.isbn || result[0].isbn,
+          title: req.body.title || result[0].title,
+          author: req.body.author || result[0].author,
+          category: req.body.category || result[0].category,
+          stock: req.body.stock || result[0].stock
+        }
+      }, (err, result) => {
+        if (err) return res.send(err)
+          res.send(result);
+          db.close();
+      });
+    });
+  });
+}
 
 module.exports = {
-  getAll, getSingle, createBook, deleteBook
+  getAll, getSingle, createBook, deleteBook, updateBook
 };
