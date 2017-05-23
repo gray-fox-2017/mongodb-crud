@@ -27,4 +27,18 @@ methods.getAll = (req, res) => {
   });
 }
 
+methods.getById = (req, res) => {
+  MongoClient.connect(url, function(err, db) {
+    let collection = db.collection('books')
+    collection.find({
+      "_id": new ObjectId(req.params.id)
+    }).toArray(function(err, record) {
+        if (err) res.json({err})
+        console.log("GetById data book success");
+        res.json(record)
+        db.close()
+    });
+  })
+}
+
 module.exports = methods
