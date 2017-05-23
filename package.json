@@ -1,0 +1,28 @@
+{
+  "name": "mongodb-crud",
+  "version": "1.0.0",
+  "description": "crud operation app using mongodb",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hakiemaul/mongodb-crud.git"
+  },
+  "keywords": [
+    "crud",
+    "mongodb"
+  ],
+  "author": "hakiemaul",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hakiemaul/mongodb-crud/issues"
+  },
+  "homepage": "https://github.com/hakiemaul/mongodb-crud#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongodb": "^2.2.27"
+  }
+}
