@@ -1,0 +1,24 @@
+{
+  "name": "mongodb-crud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start" : "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ambo-dalle/mongodb-crud.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ambo-dalle/mongodb-crud/issues"
+  },
+  "homepage": "https://github.com/ambo-dalle/mongodb-crud#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "mongodb": "^2.2.27",
+    "nodemon": "^1.11.0"
+  }
+}
