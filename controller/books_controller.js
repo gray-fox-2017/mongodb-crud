@@ -86,20 +86,22 @@ var DeleteBook = (req,res,next)=>{
 
 var updateBook = (req,res,next)=>{
      MongoClient.connect(url, (err, db)=>{
-          console.log('MongoClient');
           if (err) {
-               console.log('if abis MongoClient');
                res.send(err)
           } else {
-               console.log('Else MongoClient');
                let bookstore = db.collection('collection_books')
                bookstore.updateOne({
                     _id : ObjectID(req.params.id)
                },
                {
-                    $set : req.body
+                    $set :  {
+                         isbn : req.body.isbn,
+                         title : req.body.title,
+                         author : req.body.author,
+                          category : req.body.category,
+                          stok : req.body.stok
+                    }
                }, {new : true }, (err, documents)=>{
-                    console.log('abis update');
                     if (err) {
                          console.log('abis if update');
                          res.send(err)
