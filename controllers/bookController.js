@@ -15,4 +15,16 @@ methods.insertOne = (req, res) => {
   });
 }
 
+methods.getAll = (req, res) => {
+  MongoClient.connect(url, function(err, db) {
+    let collection = db.collection('books')
+    collection.find({}).toArray(function(err, records) {
+        if (err) res.json({err})
+        console.log("Get all data books success");
+        res.json(records)
+        db.close()
+    });
+  });
+}
+
 module.exports = methods
