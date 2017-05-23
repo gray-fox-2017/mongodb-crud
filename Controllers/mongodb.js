@@ -1,18 +1,24 @@
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:3000/bookscollection';
+var url = 'mongodb://book:booking@ds161295.mlab.com:61295/bookscollection'
 
 
 function create (req,res,next){
   MongoClient.connect(url,function(err,db){
-    db.collection('Books').insertOne({
+    db.collection('books').insertOne({
       "isbn": req.body.isbn,
       "title": req.body.title,
       "author": req.body.author,
       "category": req.body.category,
       "stock": req.body.stock
     },function(err,result){
-      res.send(`Success Create: ` + result)
+      if(!err){
+        res.send(`Success Create: ${req.body.title}`)
+        
+      }
+      else{
+        console.log(err);
+      }
       db.close()
     })
   })
@@ -20,8 +26,8 @@ function create (req,res,next){
 
 function update (req,res,next){
   MongoClient.connect(url,function(err,db){
-    db.collection('Books'),updateOne({
-      "title": req.params.title
+    db.collection('books').updateOne({
+      "_id": ObjectId(req.params.id)
     },{
       $set:{  
         "isbn": req.body.isbn,
@@ -31,7 +37,7 @@ function update (req,res,next){
         "stock": req.body.stock
       }
     },function(err,result){
-      res.send(`${req.params.title} Updated!`)
+      res.send(`${req.params.id} Updated!`)
       db.close()
     })
   })
@@ -39,8 +45,8 @@ function update (req,res,next){
 
 function deleteBook (req,res,next){
   MongoClient.connect(url,function(err,db){
-    db.collection('Books'),deleteOne({
-      "title": req.params.title
+    db.collection('books').deleteOne({
+      "_id":ObjectId(req.params.id)
     },function (err,result){
       res.send(`${req.params.title} Deleted!`)
       db.close()
@@ -50,18 +56,17 @@ function deleteBook (req,res,next){
 
 function findAllBooks (req,res,next){
   MongoClient.connect(url,function(err,db){
-    db.collection('Books'),find( );
-    cursor.each(function (err,result){
-      res.send(result)
-      db.close()
-    })
+    let cursor = db.collection('books').find({}).toArray(function (err,result){
+        res.send(result)
+        db.close()
+      })  
   })  
 }
 
 function findBook (req,res,next){
   MongoClient.connect(url,function(err,db){
-    db.collection('Books'),find({
-      "title": req.params.title
+    db.collection('books').find({
+      "_id":ObjectId(req.params.id)
     },function(err,result){
       res.send(result)
       db.close()
@@ -71,6 +76,6 @@ function findBook (req,res,next){
 
 
 module.exports = {
-  create,update,deleteBook,findAllBooks,findBook
+   create,update,deleteBook,findAllBooks,findBook
 }
 

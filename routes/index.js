@@ -4,9 +4,9 @@ const controller = require('../Controllers/mongodb.js')
 /* GET home page. */
 router.post('/add', controller.create)
 
-router.put('/edit', controller.update)
+router.put('/:id', controller.update)
 
-router.delete('/delete/:title', controller.deleteBook)
+router.delete('/:title', controller.deleteBook)
 
 router.get('/', controller.findAllBooks)
 
