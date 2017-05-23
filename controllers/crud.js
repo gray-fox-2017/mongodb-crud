@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost/library';
+var ObjectID = require('mongodb').ObjectID;
 
 var seedBooks = (() => {
   MongoClient.connect(url, function(err, db) {
@@ -54,8 +55,10 @@ var findBooks = ((req,res) => {
 var findBook = ((req,res) => {
   MongoClient.connect(url, function(err, db) {
     let collection = db.collection('books');
-    let isbn = req.params.isbn;
-    collection.findOne({isbn:isbn})
+    //let isbn = req.params.isbn;
+    let id = req.params.id;
+    console.log(id);
+    collection.findOne({_id:ObjectID(id)})
       .then (book => {
         book ? res.send(book) : res.send('Book is not found.');
       });
@@ -66,16 +69,22 @@ var findBook = ((req,res) => {
 var updateBook = ((req,res) => {
   MongoClient.connect(url, function(err, db) {
     let collection = db.collection('books');
-    let isbn = req.params.isbn;
-    collection.findOne({isbn:isbn})
+    let id = req.params.id;
+    collection.findOne({_id:ObjectID(id)})
       .then (book => {
-        collection.updateOne({isbn: book.isbn}, {$set: {
+        console.log(book._id);
+        console.log(req.body.stock);
+        collection.updateOne({_id:ObjectID(id)}, {$set: {
           title: req.body.title || book.title,
           author: req.body.author || book.author,
           category: req.body.category || book.category,
-          stock: req.body.stock || book.stock
+          stock: req.body.stock || book.stock,
+          isbn: req.body.isbn || book.isbn
         }}, function (err, result) {
+          console.log(result);
+          console.log(err);
           res.send('Book is updated');
+          db.close();
         });
       })
       .catch (err => {
@@ -87,15 +96,15 @@ var updateBook = ((req,res) => {
     //      .then (() => {
     //        res.send('Book is updated');
     //      });
-    db.close();
   });
 });
 
 var deleteBook = ((req,res) => {
   MongoClient.connect(url, function(err, db) {
     let collection = db.collection('books');
-    let isbn = req.params.isbn;
-    collection.deleteOne({isbn:isbn}, function(err,deleted) {
+    //let isbn = req.params.isbn;
+    let id = req.params.id;
+    collection.deleteOne({_id:ObjectID(id)}, function(err,deleted) {
       deleted.n > 0 ? res.send ('Book is deleted') : res.send('ISBN is not found');
     });
     db.close();
