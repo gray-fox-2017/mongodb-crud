@@ -57,22 +57,36 @@ const deleteDoc = function(req,res) {
 const updateDoc = function(req,res) {
   models.MongoClient.connect(models.url, function(err,db) {
     db.collection('books')
-    .update({
+    .find({
       _id : ObjectId(req.params.id)
-    },{
-      title : req.body.title,
-      author : req.body.author,
-      isbn : req.body.isbn,
-      stock : req.body.stock
-    },function(err,result) {
-      if (err) {
-        res.send(err)
+    })
+    .toArray(function(err,resultFind) {
+      if (resultFind) {
+        db.collection('books')
+        .update({
+          _id : ObjectId(req.params.id)
+        },{
+          title : req.body.title || resultFind[0].title,
+          author : req.body.author || resultFind[0].author,
+          isbn : req.body.isbn || resultFind[0].isbn,
+          stock : req.body.stock || resultFind[0].stock
+        },function(err,resultUpd) {
+          if (err) {
+            res.send(err)
+            db.close()
+          } else {
+            res.send(resultUpd)
+            db.close()
+          }
+        })
         db.close()
       } else {
-        res.send(result)
-        db.close()
+        res.send(err)
+        bd.close()
       }
     })
+
+
   })
 }
 
