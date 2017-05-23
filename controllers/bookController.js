@@ -68,4 +68,23 @@ methods.updateById = (req, res) => {
   })
 }
 
+methods.deleteById = (req, res) => {
+  MongoClient.connect(url, function(err, db) {
+    let collection = db.collection('books')
+    collection.find({
+      "_id": new ObjectId(req.params.id)
+    }).toArray(function(err, record) {
+      console.log(record[0]);
+      collection.deleteOne({
+          "_id": record[0]._id
+      }, function(err, record) {
+          if (err) res.json({err})
+          console.log('DeleteById success');
+          res.json(record)
+          db.close()
+      });
+    });
+  })
+}
+
 module.exports = methods
